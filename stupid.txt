@@ -1,0 +1,15 @@
+
+IF(?turn == 0) THEN
+	$n = 0;
+ELSE
+	;
+END IF
+$n = $n + 1;
+
+
+PROD 2;
+
+BUY 2, ?raw_price;
+
+SELL 2, ?production_price;
+

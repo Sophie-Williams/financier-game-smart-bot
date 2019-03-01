@@ -1,0 +1,63 @@
+
+
+IF(?turn == 0) THEN
+	$num = ?players;
+	$deficit = 0;
+	$max_marge = 0;
+	$raw_last = 0;
+ELSE
+	$raw_last = ?raw_price;
+END IF
+	
+$i  = 0;
+
+@makemarg:
+	$i = $i + 1;
+	IF($i > $num) THEN
+		GOTO @endmakemarg;
+	ELSE
+		;
+	END IF
+	$test = ?result_raw_price($i);
+	$tmp = $test - $raw_last;
+	IF($tmp > $max_marge) THEN
+		$max_marge = $tmp;
+	ELSE
+		;
+	END IF
+
+GOTO @makemarg;
+@endmakemarg:
+
+
+$sum = 0;
+$i  = 0;
+@makesum:
+	$i = $i + 1;
+	
+	IF($i > $num) THEN
+		GOTO @endmakesum;
+	ELSE
+		;
+	END IF
+	$sum = $sum + ?factories($i);
+GOTO @makesum;
+@endmakesum:
+
+
+IF ((?supply <= $sum) AND (?turn != 0)) THEN 
+	$deficit = 1;
+	SELL 2, ?production_price;
+	PROD 2;
+	BUY 2, (?raw_price + $max_marge + 1);
+	$deficit = 0;
+
+ELSE
+	$deficit = 0;
+	SELL 2, ?production_price;
+	PROD 2;
+	BUY 2, ?raw_price;
+END IF
+
+
+
